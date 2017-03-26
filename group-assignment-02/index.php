@@ -1,3 +1,11 @@
+<!--
+Summary:
+The follow assignment will have three functions. 
+
+The first function will collect the requisite data from the user.
+The second function will validate the requisite date from the user.
+The third function will return the data to a new page and confirm the user's information.
+-->
 <?php
   if (isset($_GET['source'])) {
     highlight_file($_SERVER['SCRIPT_FILENAME']);
@@ -6,7 +14,7 @@
 ?>
 
 <!--
-  Contributors: Ted Herr, Greg Gorlen
+  Contributors: Ted Herr, Greg Gorlen, Raymond Chen
 -->
 
 <!DOCTYPE html>
@@ -28,9 +36,10 @@
 
     <?php
 
-      // Prints a pre-set user registration form
+      //First Function, Prints a pre-set user registration form to collect requisite data from user
       function displayRegistrationForm() {
-        echo '<form method="POST" action="group_assignment02.php">
+        print<<<FORM
+        <form method="POST" action="group_assignment02.php">
                 <table>
                   <tr>
                     <td>First name:</td>
@@ -68,22 +77,25 @@
                     <td></td>
                   </tr>
                 </table>
-              </form>';
+              </form>
+FORM;
       } // end displayRegistration
 
-      // Validates a user's form input
-      // All fields must be present with a valid email address
+      // Second Function, Validates a user's form input: All fields must be present with a valid email address
       function validateRegistration($data)  {
         return $data['first'] && $data['last'] &&
                $data['email'] && $data['color'] &&
                filter_var($data['email'], FILTER_VALIDATE_EMAIL);
       } // end validateRegistration
 
-      // Prints a user's registration information
+      // Third Function, Prints a user's registration information
       function outputRegistration($data) {
-        echo '<table>
+        //cleans the page before output
+        ob_end_clean();
+        print<<<OUTPUT
+        <table>
                 <tr>
-                  <td>Welcome, ' . $data['first'] . ' !</td>
+                  <td>Welcome, $data[first] !</td>
                 </tr>
                 <tr>
                   <td>
@@ -94,38 +106,35 @@
               <table>
                 <tr>
                   <td>First name:</td>
-                  <td>' . $data['first'] . '</td>
+                  <td>$data[first]</td>
                 </tr>
                 <tr>
                   <td>Last name:</td>
-                  <td>' . $data['last'] . '</td>
+                  <td>$data[last]</td>
                 </tr>
                 <tr>
                   <td>Email:</td>
-                  <td>' . $data['email'] . '</td>
+                  <td>$data[email]</td>
                 </tr>
                 <tr>
                   <td>Favorite color:</td>
-                  <td>' . $data['color'] . '</td>
+                  <td>$data[color]</td>
                 </tr>
-              </table>';
+              </table>
+OUTPUT;
       } // end outputRegistration
 
-
-      // Show the user the registration form
+      // Run the first function and Show the user the registration form
       displayRegistrationForm();
-
       // If a form has been submitted, process it
       if (count($_POST)) {
-
         // Retrieve data from form
         $data = [];
         $data['first'] = $_POST['firstname'];
         $data['last'] = $_POST['lastname'];
         $data['email'] = $_POST['email'];
         $data['color'] = $_POST['color'];
-
-        // Display confirmation or failure
+        // Run the second and third function to display failure page or confirmation page.
         if (validateRegistration($data)) {
           outputRegistration($data);
         }
